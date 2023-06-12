@@ -1,0 +1,111 @@
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+
+const candidates = [
+  { id: 1, name: 'Candidate 1', votes: 0 },
+  { id: 2, name: 'Candidate 2', votes: 2 },
+  { id: 3, name: 'Candidate 3', votes: 0 },
+];
+
+const App = () => {
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+
+  const handleVote = () => {
+    if (selectedCandidate) {
+      const updatedCandidates = candidates.map((candidate) => {
+        if (candidate.id === selectedCandidate.id) {
+          return { ...candidate, votes: candidate.votes + 1 };
+        }
+        return candidate;
+      });
+      setSelectedCandidate(null);
+      // You can perform further actions with the updatedCandidates data, such as storing it in a database.
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Election Application</Text>
+      <Text style={styles.subtitle}>Select your preferred candidate:</Text>
+      {candidates.map((candidate) => (
+        <TouchableOpacity
+          key={candidate.id}
+          style={[
+            styles.candidateItem,
+            candidate === selectedCandidate && styles.selectedItem,
+          ]}
+          onPress={() => setSelectedCandidate(candidate)}
+        >
+          <Text style={styles.candidateName}>{candidate.name}</Text>
+          <Text style={styles.voteCount}>Votes: {candidate.votes}</Text>
+        </TouchableOpacity>
+      ))}
+      <TouchableOpacity
+        style={[styles.button, selectedCandidate ? styles.activeButton : styles.disabledButton]}
+        onPress={handleVote}
+        disabled={!selectedCandidate}
+      >
+        <Text style={styles.buttonText}>Vote</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  subtitle: {
+    fontSize: 18,
+    marginBottom: 16,
+  },
+  candidateItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+  },
+  selectedItem: {
+    borderColor: 'blue',
+  },
+  candidateName: {
+    fontSize: 16,
+  },
+  voteCount: {
+    fontSize: 14,
+    color: '#888',
+  },
+  button: {
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#4287f5',
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  activeButton: {
+    opacity: 1,
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
+
+export default App;
